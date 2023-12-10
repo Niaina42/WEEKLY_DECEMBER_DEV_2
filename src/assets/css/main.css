@@ -210,6 +210,7 @@ a.btn i, button.btn i {
   box-shadow: rgba(101, 118, 255, 0.1) 0px 0px 0px 3px;
   border-color: rgba(101, 118, 255, 0);
   outline: 0px;
+  color: black;
 }
 
 .card {
@@ -266,6 +267,8 @@ a.btn i, button.btn i {
   border-image: initial;
   background: rgb(255, 255, 255);
   border-radius: 8px;
+  color: #1b1919;
+  font-weight: bold;
 }
 
 .chat-search input {
@@ -500,7 +503,7 @@ img.shadow {
   right: 5px;
   bottom: 5px;
   padding: 2px 6px;
-  font-size: 11px;
+  font-size: 9px;
   color: #6c757d;
   cursor: pointer;
 }
@@ -809,4 +812,8 @@ img.shadow {
 
 .ps-container:hover>.ps-scrollbar-y-rail:hover>.ps-scrollbar-y {
   background-color: #a2adb7
+}
+
+.message-sent-by {
+  font-size: 10px;
 }
