@@ -1,14 +1,13 @@
-import { deleteDoc, doc } from "firebase/firestore";
+import { collection, deleteDoc, doc } from "firebase/firestore";
 import React from "react";
-import { useAuth } from "../../../../services/context/auth-context";
 import { firestoreDB } from "../../../../services/firebase/firebase";
+import { useAuth } from "../../../../services/context/auth-context";
 
 const MessageItem = ({ isMe, message }) => {
-
+  const { user } = useAuth();
   const timeSplit =
     message && message.sendAt.toDate().toLocaleTimeString().split(":");
   const time = timeSplit[0] + ":" + timeSplit[1];
-  const { user } = useAuth()
 
   const deleteMessage = async () => {
     const docRef = doc(firestoreDB, "messages", message.id);
@@ -56,11 +55,9 @@ const MessageItem = ({ isMe, message }) => {
         <p className="mb-0 mr-3 pr-4">{message && message.messageContent}</p>
         <div className="message-options">
           <div className="message-time">{time}</div>
-            {message && message.userSender == user.email && (
-              <div className="message-arrow" onClick={deleteMessage}>
-                <i className="bi bi-trash"></i>
-              </div>
-            )}
+            <div className="message-arrow" onClick={deleteMessage}>
+              <i className="bi bi-trash"></i>
+            </div>
         </div>
       </div>
     </div>

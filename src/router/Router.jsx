@@ -5,6 +5,7 @@ import Login from "../components/Login/Login";
 import Register from "../components/Register/Register";
 import ProtectedRoute from "../services/pageGuard/ProtectedRoute";
 import RedirectRoute from "../services/pageGuard/RedirectRoute";
+import GroupChat from "../components/GroupChat/GroupChat";
 
 const Router = () => {
   return (
@@ -39,6 +40,14 @@ const Router = () => {
           element={
             <ProtectedRoute>
               <Chat />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/group-chat/:userID/:groupID"
+          element={
+            <ProtectedRoute>
+              <GroupChat />
             </ProtectedRoute>
           }
         />

@@ -4,9 +4,9 @@ import ChatContent from "./ChatContent/ChatContent";
 import { useParams } from "react-router-dom";
 import GroupMenu from "../GroupMenu/GroupMenu";
 
-const Chat = () => {
-  const { userID, targetID } = useParams()
-  const allowSend = targetID && userID
+const GroupChat = () => {
+  const { userID, groupID } = useParams()
+  const allowSend = groupID && userID
   
   return (
     <div className="main-wrapper">
@@ -16,7 +16,7 @@ const Chat = () => {
             <MessageList />
             {
               allowSend ? (
-                <ChatContent userID={userID} targetID={targetID} />
+                <ChatContent userID={userID} groupID={groupID} />
               ) : (
                 <GroupMenu />
               )
@@ -28,4 +28,4 @@ const Chat = () => {
   );
 };
 
-export default Chat;
+export default GroupChat;
