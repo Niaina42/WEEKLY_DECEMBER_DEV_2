@@ -3,7 +3,6 @@ import MessageList from "./MessageList/MessageList";
 import ChatContent from "./ChatContent/ChatContent";
 
 const Chat = () => {
- 
   return (
     <div className="main-wrapper">
       <div className="page-content">

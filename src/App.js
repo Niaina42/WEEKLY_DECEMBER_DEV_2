@@ -1,9 +1,13 @@
-import Router from "./router/router";
+import Router from "./router/Router";
 import "./assets/css/main.css";
+import "./assets/css/login.css";
+import { AuthProvider } from "./services/context/auth-context";
 
 function App() {
   return (
-    <Router />
+    <AuthProvider>
+      <Router />
+    </AuthProvider>
   );
 }
 
