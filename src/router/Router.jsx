@@ -34,6 +34,14 @@ const Router = () => {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/chat/:userID/:targetID"
+          element={
+            <ProtectedRoute>
+              <Chat />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );

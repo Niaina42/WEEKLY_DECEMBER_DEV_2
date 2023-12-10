@@ -47,6 +47,7 @@ const updateData = (docName, docId, data) => {
 export {
   firebaseApp,
   firebaseAuth,
+  firestoreDB,
   createData,
   updateData,
 };

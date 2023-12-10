@@ -1,5 +1,5 @@
 import React, { useContext, createContext, useEffect, useState } from "react";
-import { firebaseAuth } from "../firebase/firebase";
+import { createData, firebaseAuth } from "../firebase/firebase";
 import { onAuthStateChanged, updateProfile } from "firebase/auth";
 import {
   createUserWithEmailAndPassword,
@@ -49,8 +49,17 @@ const AuthProvider = ({ children }) => {
           firebaseAuth,
           email,
           password
-        ).then((userCreated) => {
-          updateProfile(userCreated.user, { displayName });
+        ).then(async (userCreated) => {
+          let user = userCreated.user
+          // update name
+          await updateProfile(user, { displayName });
+          // store in DB
+          await createData("users", user.uid, {
+            uid: user.uid,
+            displayName: user.displayName,
+            email: user.email,
+            createdAt: user.reloadUserInfo.createdAt
+          })
           resolve(userCreated);
         });
       } catch (error) {
