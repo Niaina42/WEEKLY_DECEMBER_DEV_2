@@ -1,23 +1,45 @@
 import React, { useEffect, useState } from "react";
 import ChatItem from "./ChatItem.jsx/ChatItem";
-import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import {
+  collection,
+  onSnapshot,
+  orderBy,
+  query,
+  where,
+} from "firebase/firestore";
 import { firestoreDB } from "../../../services/firebase/firebase";
 import alasql from "alasql";
 import { useAuth } from "../../../services/context/auth-context";
+import ChatChannelItem from "./ChatChannelItem/ChatChannelItem";
+import { Link } from "react-router-dom";
 
 const MessageList = () => {
   const [allUser, setAllUser] = useState([]);
-  const [querySearch, setQuerySearch] = useState(null);
+  const [querySearch, setQuerySearch] = useState("");
   const [searchResults, setSearchResults] = useState([]);
-  const { user } = useAuth()
+  const [allChannel, setAllChannel] = useState([]);
+  const { user } = useAuth();
 
   const getAllUser = async () => {
     const q = query(collection(firestoreDB, "users"));
     onSnapshot(q, (querySnapshot) => {
       const list = querySnapshot.docs.map((doc) => doc.data());
-      const filterList = list.filter(item => item.email !== user.email);
+      const filterList = list.filter((item) => item.email !== user.email);
 
       setAllUser(filterList);
+    });
+  };
+
+  const getAllChannel = async () => {
+    const q = query(
+      collection(firestoreDB, "channels"),
+      where("userInArr", "array-contains", user.email),
+      orderBy("updatedAt", "desc")
+    );
+    onSnapshot(q, (querySnapshot) => {
+      const list = querySnapshot.docs.map((doc) => doc.data());
+      console.log(list);
+      setAllChannel(list);
     });
   };
 
@@ -34,7 +56,7 @@ const MessageList = () => {
   }, [querySearch]);
 
   useEffect(() => {
-    getAllUser();
+    Promise.all([getAllChannel(), getAllUser()]);
   }, []);
   return (
     <div className="col-md-4 col-12 card-stacked">
@@ -46,8 +68,8 @@ const MessageList = () => {
               {/* <img className="user-detail-trigger rounded-circle shadow avatar-sm mr-3 chat-profile-picture" src="https://user-images.githubusercontent.com/35243461/168796906-ab4fc0f3-551c-4036-b455-be2dfedb9680.svg" /> */}
             </div>
             <div className="flex-shrink-0 margin-auto">
-              <a
-                href="#"
+              <Link
+                to="/chat"
                 className="btn btn-sm btn-icon btn-light active text-dark ml-2"
               >
                 <svg
@@ -63,7 +85,7 @@ const MessageList = () => {
                   <rect x="2" y="7" width="20" height="15" rx="2" ry="2"></rect>
                   <polyline points="17 2 12 7 7 2"></polyline>
                 </svg>
-              </a>
+              </Link>
               <a
                 href="#"
                 className="btn btn-sm btn-icon btn-light active text-dark ml-2"
@@ -105,8 +127,14 @@ const MessageList = () => {
           <div className="pb-3 d-flex flex-column navigation-mobile pagination-scrool chat-user-scroll">
             {searchResults &&
               searchResults.length != 0 &&
-              searchResults.map((user) => <ChatItem key={user.uid} data={user} />)}
-            {searchResults.length == 0 && <ChatItem />}
+              searchResults.map((user) => (
+                <ChatItem key={user.uid} data={user} />
+              ))}
+            {searchResults.length == 0 &&
+              allChannel &&
+              allChannel.map((channel, idx) => (
+                <ChatChannelItem key={idx} channel={channel} />
+              ))}
           </div>
         </div>
       </div>

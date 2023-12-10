@@ -23,7 +23,7 @@ const MessageInput = ({ scrollMessage, activeChannel }) => {
           await updateData("channels", activeChannel.id, {
             updatedAt: new Date(),
             lastMessage: message,
-            seen: false,
+            seenBy: [user.email],
           });
           setMessage("")
           setLoading(false);

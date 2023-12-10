@@ -38,8 +38,10 @@ const ChatContent = ({ userID, targetID }) => {
   const getChannel = async (target) => {
     const q = query(
       collection(firestoreDB, "channels"),
-      or(where("userIn", "==", user.email + "&&" + target.email),
-        where("userIn", "==", target.email + "&&" + user.email))
+      or(
+        where("userIn", "==", user.email + "&&" + target.email),
+        where("userIn", "==", target.email + "&&" + user.email)
+      )
     );
     const querySnapshot = await getDocs(q);
     const channel = querySnapshot.docs.map((doc) => doc.data());
@@ -56,6 +58,19 @@ const ChatContent = ({ userID, targetID }) => {
         id,
         createdAt: new Date(),
         userIn: user.email + "&&" + target.email,
+        userInArr: [user.email, target.email],
+        users: [
+          {
+            displayName: user.displayName,
+            uid: user.uid,
+            email: user.email,
+          },
+          {
+            displayName: target.displayName,
+            uid: target.uid,
+            email: target.email,
+          },
+        ],
       });
       getChannel(target);
     } catch (error) {
@@ -79,7 +94,8 @@ const ChatContent = ({ userID, targetID }) => {
     targetUser && lastMessageRef.current.scrollIntoView({ behavior: "smooth" });
   };
   useEffect(() => {
-    Promise.all([scrollMessage(), getTargetUser()]);
+    getTargetUser()
+    scrollMessage()
   }, [targetID]);
 
   return activeChannel ? (
@@ -99,8 +115,7 @@ const ChatContent = ({ userID, targetID }) => {
                   </p>
                 </a>
                 <p className="sub-caption text-muted text-small mb-0">
-                  <i className="la la-clock mr-1"></i>last seen today at 09:15
-                  PM
+                  {targetUser && targetUser.email}
                 </p>
               </div>
             </div>
@@ -121,7 +136,10 @@ const ChatContent = ({ userID, targetID }) => {
           </div>
         </div>
 
-        <MessageInput activeChannel={activeChannel} scrollMessage={scrollMessage} />
+        <MessageInput
+          activeChannel={activeChannel}
+          scrollMessage={scrollMessage}
+        />
       </div>
     </div>
   ) : (
